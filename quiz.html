@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ 我的財務人格測驗</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a2540;
+    --navy-light: #243052;
+    --navy-deep: #0f1829;
+    --cream: #f5f0e8;
+    --cream-dark: #ede5d5;
+    --gold: #c9a84c;
+    --gold-light: #e0c97a;
+    --gold-pale: #f0e4bb;
+    --text-dark: #1a2540;
+    --text-mid: #4a5568;
+    --text-light: #8a96a8;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--navy-deep);
+    color: var(--cream);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── Background texture ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(201,168,76,0.04) 0%, transparent 50%),
+      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.01) 60px, rgba(255,255,255,0.01) 61px),
+      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.01) 60px, rgba(255,255,255,0.01) 61px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ─── Header ─── */
+  .header {
+    text-align: center;
+    padding: 60px 0 48px;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .header-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .ornament-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+  .ornament-line.right {
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .ornament-diamond {
+    width: 8px;
+    height: 8px;
+    border: 1px solid var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 300;
+    font-size: clamp(22px, 5vw, 30px);
+    color: var(--cream);
+    letter-spacing: 0.12em;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .header-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .header-desc {
+    font-size: 13.5px;
+    color: rgba(245,240,232,0.6);
+    line-height: 1.9;
+    letter-spacing: 0.05em;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  /* ─── Progress bar ─── */
+  .progress-wrap {
+    margin-bottom: 40px;
+    animation: fadeIn 0.6s 0.3s both;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .progress-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: var(--gold-light);
+  }
+
+  .progress-bar {
+    height: 2px;
+    background: rgba(201,168,76,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+  }
+
+  /* ─── Card base ─── */
+  .card {
+    background: rgba(26,37,64,0.7);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-radius: 4px;
+    padding: 36px 32px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(8px);
+    animation: fadeUp 0.5s ease both;
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 24px 20px; }
+  }
+
+  /* ─── Info section ─── */
+  .info-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .info-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(201,168,76,0.2);
+  }
+
+  .field-group { margin-bottom: 24px; }
+  .field-group:last-child { margin-bottom: 0; }
+
+  .field-label {
+    display: block;
+    font-size: 12px;
+    color: rgba(245,240,232,0.5);
+    letter-spacing: 0.15em;
+    margin-bottom: 10px;
+  }
+
+  .field-required { color: var(--gold); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="email"] {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 3px;
+    padding: 12px 16px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--cream);
+    outline: none;
+    transition: border-color 0.3s, background 0.3s;
+    letter-spacing: 0.05em;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+
+  input::placeholder { color: rgba(245,240,232,0.2); }
+
+  /* Radio groups for gender / age */
+  .radio-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .radio-chip {
+    position: relative;
+  }
+
+  .radio-chip input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+  }
+
+  .radio-chip label {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 2px;
+    font-size: 13px;
+    color: rgba(245,240,232,0.6);
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.08em;
+  }
+
+  .radio-chip input[type="radio"]:checked + label {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+
+  .radio-chip label:hover {
+    border-color: rgba(201,168,76,0.5);
+    color: rgba(245,240,232,0.85);
+  }
+
+  /* Age: checkbox style (multiple) */
+  .checkbox-chip {
+    position: relative;
+  }
+
+  .checkbox-chip input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+  }
+
+  .checkbox-chip label {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 2px;
+    font-size: 13px;
+    color: rgba(245,240,232,0.6);
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.08em;
+  }
+
+  .checkbox-chip input[type="checkbox"]:checked + label {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+
+  /* ─── Question card ─── */
+  .question-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    margin-bottom: 14px;
+  }
+
+  .question-text {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 400;
+    font-size: 15.5px;
+    color: var(--cream);
+    line-height: 1.8;
+    letter-spacing: 0.06em;
+    margin-bottom: 24px;
+  }
+
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-item {
+    position: relative;
+  }
+
+  .option-item input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+  }
+
+  .option-item label {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-size: 13.5px;
+    color: rgba(245,240,232,0.7);
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+  }
+
+  .option-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--gold);
+    min-width: 18px;
+    margin-top: 1px;
+  }
+
+  .option-item label:hover {
+    border-color: rgba(201,168,76,0.4);
+    background: rgba(201,168,76,0.05);
+    color: var(--cream);
+  }
+
+  .option-item input[type="radio"]:checked + label {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.1);
+    color: var(--cream);
+  }
+
+  .option-item input[type="radio"]:checked + label .option-letter {
+    color: var(--gold-light);
+  }
+
+  /* ─── Navigation buttons ─── */
+  .nav-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 3px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-prev {
+    background: transparent;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: rgba(245,240,232,0.5);
+    flex: 0 0 auto;
+    padding: 14px 24px;
+  }
+
+  .btn-prev:hover {
+    border-color: rgba(201,168,76,0.5);
+    color: var(--cream);
+  }
+
+  .btn-next {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    color: var(--navy-deep);
+    font-weight: 400;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-next::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0);
+    transition: background 0.3s;
+  }
+
+  .btn-next:hover::before { background: rgba(255,255,255,0.1); }
+  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-submit {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    color: var(--navy-deep);
+    font-weight: 400;
+    width: 100%;
+    padding: 16px;
+    font-size: 14px;
+    letter-spacing: 0.2em;
+  }
+
+  .btn-submit:hover { opacity: 0.92; }
+
+  /* ─── Result section ─── */
+  #result-section { display: none; }
+
+  .result-header {
+    text-align: center;
+    padding: 48px 0 36px;
+  }
+
+  .result-badge {
+    display: inline-block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.35em;
+    border: 1px solid rgba(201,168,76,0.35);
+    padding: 6px 20px;
+    margin-bottom: 24px;
+  }
+
+  .result-icon {
+    font-size: 52px;
+    margin-bottom: 16px;
+    display: block;
+    animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  .result-type-name {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 600;
+    font-size: clamp(20px, 5vw, 26px);
+    color: var(--gold-light);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .result-subtitle {
+    font-size: 12px;
+    color: rgba(245,240,232,0.4);
+    letter-spacing: 0.2em;
+  }
+
+  /* Score breakdown */
+  .score-card {
+    background: rgba(15,24,41,0.8);
+    border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+
+  .score-title {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.25em;
+    margin-bottom: 20px;
+  }
+
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .score-letter {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--gold);
+    width: 16px;
+    text-align: center;
+  }
+
+  .score-bar-wrap {
+    flex: 1;
+    height: 4px;
+    background: rgba(201,168,76,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .score-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 4px;
+    width: 0;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .score-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: rgba(245,240,232,0.5);
+    width: 24px;
+    text-align: right;
+  }
+
+  /* Result description */
+  .desc-card {
+    background: rgba(26,37,64,0.6);
+    border: 1px solid rgba(201,168,76,0.18);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+    padding: 32px 32px;
+    margin-bottom: 20px;
+  }
+
+  .desc-keyword {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.25em;
+    margin-bottom: 16px;
+  }
+
+  .desc-keyword::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .desc-body {
+    font-size: 14px;
+    color: rgba(245,240,232,0.75);
+    line-height: 1.95;
+    letter-spacing: 0.04em;
+    margin-bottom: 20px;
+    white-space: pre-line;
+  }
+
+  .desc-trait {
+    font-size: 12px;
+    color: var(--gold-light);
+    letter-spacing: 0.1em;
+    padding: 10px 16px;
+    background: rgba(201,168,76,0.08);
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+
+  .desc-advice-title {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .desc-advice-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(201,168,76,0.2);
+  }
+
+  .desc-advice-body {
+    font-size: 13.5px;
+    color: rgba(245,240,232,0.65);
+    line-height: 1.9;
+    letter-spacing: 0.04em;
+  }
+
+  /* Tie notice */
+  .tie-notice {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(245,240,232,0.4);
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  /* Submit status */
+  .submit-status {
+    text-align: center;
+    font-size: 12.5px;
+    color: rgba(245,240,232,0.4);
+    letter-spacing: 0.1em;
+    margin-top: 16px;
+    min-height: 20px;
+  }
+
+  .submit-status.success { color: #7ec8a0; }
+  .submit-status.error { color: #e0846a; }
+
+  /* Divider ornament */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .divider-line { flex: 1; height: 1px; background: rgba(201,168,76,0.15); }
+  .divider-icon { font-size: 12px; color: rgba(201,168,76,0.4); }
+
+  /* ─── Animations ─── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .slide-in {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  /* Validation error */
+  .error-msg {
+    font-size: 11.5px;
+    color: #e0846a;
+    margin-top: 8px;
+    letter-spacing: 0.08em;
+    display: none;
+  }
+
+  .field-error input,
+  .field-error .radio-row,
+  .field-error .options-list {
+    border-color: rgba(224,132,106,0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ═══ QUIZ SECTION ═══ -->
+  <div id="quiz-section">
+
+    <div class="header">
+      <div class="header-ornament">
+        <div class="ornament-line"></div>
+        <div class="ornament-diamond"></div>
+        <div class="ornament-line right"></div>
+      </div>
+      <p class="header-en">Financial Personality Quiz</p>
+      <h1>✨ 我的財務人格測驗</h1>
+      <p class="header-desc">這是一份輕鬆的小測驗，只需要 3 分鐘<br>了解你的財務類型與金錢信念</p>
+    </div>
+
+    <!-- Step 0: Basic Info -->
+    <div id="step-0" class="step-panel">
+      <div class="card slide-in">
+        <div class="info-title">基本資料</div>
+
+        <div class="field-group" id="field-name">
+          <label class="field-label">姓名 <span class="field-required">*</span></label>
+          <input type="text" id="input-name" placeholder="請輸入您的姓名">
+          <div class="error-msg" id="err-name">請填寫姓名</div>
+        </div>
+
+        <div class="field-group" id="field-email">
+          <label class="field-label">電子郵件 <span class="field-required">*</span></label>
+          <input type="email" id="input-email" placeholder="example@email.com">
+          <div class="error-msg" id="err-email">請填寫有效的 Email</div>
+        </div>
+
+        <div class="field-group" id="field-gender">
+          <label class="field-label">性別 <span class="field-required">*</span></label>
+          <div class="radio-row">
+            <div class="radio-chip">
+              <input type="radio" name="gender" id="g-male" value="男性">
+              <label for="g-male">男性</label>
+            </div>
+            <div class="radio-chip">
+              <input type="radio" name="gender" id="g-female" value="女性">
+              <label for="g-female">女性</label>
+            </div>
+            <div class="radio-chip">
+              <input type="radio" name="gender" id="g-other" value="其他">
+              <label for="g-other">其他</label>
+            </div>
+          </div>
+          <div class="error-msg" id="err-gender">請選擇性別</div>
+        </div>
+
+        <div class="field-group" id="field-age">
+          <label class="field-label">年齡區間 <span class="field-required">*</span></label>
+          <div class="radio-row">
+            <div class="radio-chip">
+              <input type="radio" name="age" id="a1" value="18-20歲">
+              <label for="a1">18–20歲</label>
+            </div>
+            <div class="radio-chip">
+              <input type="radio" name="age" id="a2" value="21-30歲">
+              <label for="a2">21–30歲</label>
+            </div>
+            <div class="radio-chip">
+              <input type="radio" name="age" id="a3" value="31-40歲">
+              <label for="a3">31–40歲</label>
+            </div>
+            <div class="radio-chip">
+              <input type="radio" name="age" id="a4" value="41-50歲">
+              <label for="a4">41–50歲</label>
+            </div>
+            <div class="radio-chip">
+              <input type="radio" name="age" id="a5" value="51-60歲">
+              <label for="a5">51–60歲</label>
+            </div>
+            <div class="radio-chip">
+              <input type="radio" name="age" id="a6" value="61-70歲">
+              <label for="a6">61–70歲</label>
+            </div>
+          </div>
+          <div class="error-msg" id="err-age">請選擇年齡區間</div>
+        </div>
+
+        <div class="nav-row" style="margin-top:28px">
+          <button class="btn btn-next" onclick="startQuiz()">開始測驗 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 1–9: Questions (rendered by JS) -->
+    <div id="step-questions" style="display:none">
+      <div class="progress-wrap">
+        <div class="progress-info">
+          <span class="progress-label">進度</span>
+          <span class="progress-count" id="progress-text">1 / 9</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:11.1%"></div>
+        </div>
+      </div>
+
+      <div id="question-wrap"></div>
+
+      <div class="nav-row" id="q-nav">
+        <button class="btn btn-prev" id="btn-prev" onclick="prevQ()">← 上一題</button>
+        <button class="btn btn-next" id="btn-next" onclick="nextQ()">下一題 →</button>
+      </div>
+    </div>
+
+  </div><!-- /quiz-section -->
+
+
+  <!-- ═══ RESULT SECTION ═══ -->
+  <div id="result-section">
+
+    <div class="result-header">
+      <div class="result-badge">Your Financial Personality</div>
+      <span class="result-icon" id="res-icon">⚖️</span>
+      <div class="result-type-name" id="res-name">全方位規劃者</div>
+      <div class="result-subtitle" id="res-subtitle">你的主要財務人格類型</div>
+    </div>
+
+    <div class="score-card slide-in">
+      <div class="score-title">各類型得分分佈</div>
+      <div id="score-bars"></div>
+    </div>
+
+    <div id="tie-notice" class="tie-notice" style="display:none">
+      ✦ 你有兩種或以上的人格類型並列第一，以下為完整說明
+    </div>
+
+    <div id="desc-cards"></div>
+
+    <div style="text-align:center; margin-top:36px">
+      <p class="submit-status" id="submit-status">正在儲存您的資料⋯</p>
+    </div>
+
+  </div><!-- /result-section -->
+
+</div><!-- /container -->
+
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const QUESTIONS = [
+  {
+    text: "如果這個月預算超支了，你的反應是？",
+    options: [
+      { letter:"A", text:"清楚為什麼超支的原因，或是檢視記帳紀錄找原因，提醒自己下個月要更謹慎" },
+      { letter:"B", text:"哇～不知道自己買了什麼，就當作這個月對自己好一點，下個月再省回來" },
+      { letter:"C", text:"想辦法增加收入，把錢賺回來" },
+      { letter:"D", text:"沒關係，我還有其他錢可以調，這邊少一點、那邊調一下就補回來了" },
+      { letter:"E", text:"沒在記帳，反正都是買需要的東西" }
+    ]
+  },
+  {
+    text: "家人或朋友找你一起出國旅遊，你會？",
+    options: [
+      { letter:"A", text:"先確認自己有多少旅遊基金，不想打亂原本的存錢計畫" },
+      { letter:"B", text:"覺得時間、行程和費用可以負擔，就衝了，如果沒錢就不去了" },
+      { letter:"C", text:"會想著這趟能不能開眼界、認識人、學東西、新體驗，不想只是去玩玩而已" },
+      { letter:"D", text:"想去，但會認真比價找優惠，既要玩得開心，也要控制在合理預算內" },
+      { letter:"E", text:"不會馬上答應，等時間近了再決定" }
+    ]
+  },
+  {
+    text: "當你需要大筆資金時，你對「借錢」的想法是？",
+    options: [
+      { letter:"A", text:"盡量不要借錢，欠錢會有壓力；如果借了要趕快還，才不會付更多利息" },
+      { letter:"B", text:"這是必要開銷，有需要就要借" },
+      { letter:"C", text:"借錢是槓桿工具，只要計算好風險跟報酬，可以加速財富增加" },
+      { letter:"D", text:"必要時才會借，並且會評估各家銀行的利率和還款能力，合理的話就貸款" },
+      { letter:"E", text:"想辦法找其他替代方案，也說不定過一陣子後計畫有變" }
+    ]
+  },
+  {
+    text: "當你想到「退休金」時，第一個浮現的想法是？",
+    options: [
+      { letter:"A", text:"會擔心，不知道要存多少才夠，怕老了錢不夠用" },
+      { letter:"B", text:"先過好現在吧！得先把眼前的問題處理好，未來還有太多變數" },
+      { letter:"C", text:"退休金是靠投資賺來，不是靠存出來的" },
+      { letter:"D", text:"退休金要存，但現在的生活也不能太省" },
+      { letter:"E", text:"想趕快存夠退休金，就能提早退休，做自己想做的事" }
+    ]
+  },
+  {
+    text: "遇到重要日子（生日、節日、紀念日、過年），你送禮的策略是？",
+    options: [
+      { letter:"A", text:"先設個預算範圍，挑選實用的禮物，不想花太多錢" },
+      { letter:"B", text:"買對方期待或想要的禮物，送禮送到心坎裡" },
+      { letter:"C", text:"送有意義或有價值的禮物，算是經營人脈的一種投資" },
+      { letter:"D", text:"看關係和場合決定，有需要的話，超過一點預算沒關係" },
+      { letter:"E", text:"直接問對方想要什麼，我付錢就好，省事、省力、省麻煩" }
+    ]
+  },
+  {
+    text: "你對「投資」的第一個念頭是什麼？",
+    options: [
+      { letter:"A", text:"如果虧損了怎麼辦！" },
+      { letter:"B", text:"看別人賺錢好羨慕，我也想試試看，但不確定該怎麼開始" },
+      { letter:"C", text:"投資等於翻身機會，光靠薪水不夠，還要讓錢幫我賺錢" },
+      { letter:"D", text:"投資可以，但也不能投太多，要注意風險" },
+      { letter:"E", text:"這是幫自己早點財富自由的方式" }
+    ]
+  },
+  {
+    text: "你覺得「錢」對你的意義是？",
+    options: [
+      { letter:"A", text:"錢是讓我有安全感的" },
+      { letter:"B", text:"錢是為了提升生活品質，享受美好事物" },
+      { letter:"C", text:"錢是證明自己的努力和價值的" },
+      { letter:"D", text:"錢是讓生活穩定、照顧家人的" },
+      { letter:"E", text:"錢是讓自己有更多自由的權利" }
+    ]
+  },
+  {
+    text: "當你看到別人致富成功的故事時，你的第一個反應是？",
+    options: [
+      { letter:"A", text:"錢哪有那麼好賺，才不相信 2-3 年就翻倍的快速致富" },
+      { letter:"B", text:"有錢真好，可以買想要的東西、去想去的地方" },
+      { letter:"C", text:"很有興趣，想知道和學習他們的方法" },
+      { letter:"D", text:"羨慕，但也好奇他是不是犧牲了什麼（健康、時間、家庭）？" },
+      { letter:"E", text:"羨慕，但更想知道他的人生就更自由了嗎？" }
+    ]
+  },
+  {
+    text: "若要花錢在「保險」上，你的看法是？",
+    options: [
+      { letter:"A", text:"自己和家人的重要保障都要買齊，出事時比較安心" },
+      { letter:"B", text:"基本款保障就好，不想花太多錢在保費上" },
+      { letter:"C", text:"與其等保險公司那一點點理賠，不如把錢拿去投資多賺一點，才真的夠付醫藥費" },
+      { letter:"D", text:"買保險最好先做功課，或是請別人推薦，才不會當冤大頭" },
+      { letter:"E", text:"不想被保費綁死，最好是一年一約，價格低又方便解約" }
+    ]
+  }
+];
+
+const TYPES = {
+  A: {
+    icon: "🛡️",
+    name: "穩健守護者",
+    keyword: "先有安全感，才有幸福感",
+    body: "追求可預期、可掌握的生活，不願承擔太多不確定性，因此重視安全感與保障。\n存款、保險、固定收入都能讓你感到踏實，偏好保守路線。\n喜歡可預測的理財工具，家庭責任感很強，很擔心損失和風險。",
+    advice: "風險控制佳，不易受外在市場情緒影響，但也要避免「錢放太死」，容易失去財務成長機會。可學習試著讓部分資產替你工作，嘗試「階梯式」投資，從最低風險開始。"
+  },
+  B: {
+    icon: "🎉",
+    name: "快樂生活家",
+    keyword: "金錢是拿來體驗人生、享受生活的",
+    body: "樂觀、開朗，重視當下的生活品質，不想被「金錢焦慮」限制人生。\n犒賞自己、旅行、追尋快樂，才是你覺得賺錢最大的意義。\n相較於規劃未來，你更在意目前的快樂，因此常難以做到「延遲滿足」。",
+    advice: "享受當下是必須的，但容易因意外或風險而陷入困境。建議設立「未來快樂基金」，用自動轉帳幫助自己先存後花的儲蓄方式，更能無後顧之憂的享受現在。"
+  },
+  C: {
+    icon: "🚀",
+    name: "積極開創者",
+    keyword: "財富代表能力和成功",
+    body: "對財富成長有明確企圖心，勇於嘗試和突破，願意承擔高風險以追求更高回報。\n渴望看到資產的成長，並享受在投資、創業或財務規劃上，超越他人的成就感。\n錢要生錢，夢要更大！",
+    advice: "勇敢追夢很棒，只是容易忽略基礎保障和資金週轉性。記得做好基本的風險配置，建立「核心＋衛星」投資組合策略，讓財務成長更穩健。"
+  },
+  D: {
+    icon: "⚖️",
+    name: "全方位規劃者",
+    keyword: "你相信「好的理財方式是平衡的」",
+    body: "既想要資產成長，又怕承擔風險；既要享受當下生活，又希望顧及未來。\n追求「各方面都想兼顧」的安心感，通常會跟隨專家建議和主流的理財方式，走相對穩健的路。\n思考謹慎不偏激，容易每個目標都有做，但每個都沒有做得很深入。",
+    advice: "保持平衡是優勢，但因為「什麼都想要」，資源容易分散，反而難以在單一目標上看到明顯成果。建議「階段性地設定重點目標」，例如先專注累積緊急預備金，再逐步加入其他目標，執行更有效率。"
+  },
+  E: {
+    icon: "🕊️",
+    name: "彈性探索者",
+    keyword: "真正的財富是時間與自由",
+    body: "重視財務的自主性與彈性，喜歡保持流動與變化，不希望被僵化的計畫或預算綁住。\n靈活應變，能隨現實情況快速調整資金。\n金錢只是實現自由的工具。",
+    advice: "容易因為重視彈性，而錯失長期複利效應。建議先建立一個小型安全網（如足夠的緊急預備金或保險），更安心隨機應變。同時規劃「夢想資金」，讓部分資金持續長期增值。"
+  }
+};
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let userData = { name:"", email:"", gender:"", age:"" };
+let answers = new Array(9).fill(null); // null | "A"|"B"|"C"|"D"|"E"
+let currentQ = 0;
+
+// ═══════════════════════════════════════════
+// STEP 0 — Basic Info
+// ═══════════════════════════════════════════
+function startQuiz() {
+  const name = document.getElementById("input-name").value.trim();
+  const email = document.getElementById("input-email").value.trim();
+  const gender = document.querySelector('input[name="gender"]:checked');
+  const age = document.querySelector('input[name="age"]:checked');
+
+  let valid = true;
+
+  const showErr = (id, errId, show) => {
+    document.getElementById(errId).style.display = show ? "block" : "none";
+    document.getElementById(id).classList.toggle("field-error", show);
+  };
+
+  if (!name) { showErr("field-name","err-name",true); valid=false; }
+  else showErr("field-name","err-name",false);
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showErr("field-email","err-email",true); valid=false; }
+  else showErr("field-email","err-email",false);
+
+  if (!gender) { showErr("field-gender","err-gender",true); valid=false; }
+  else showErr("field-gender","err-gender",false);
+
+  if (!age) { showErr("field-age","err-age",true); valid=false; }
+  else showErr("field-age","err-age",false);
+
+  if (!valid) return;
+
+  userData = { name, email, gender: gender.value, age: age.value };
+
+  document.getElementById("step-0").style.display = "none";
+  document.getElementById("step-questions").style.display = "block";
+  renderQuestion(0);
+}
+
+// ═══════════════════════════════════════════
+// QUESTIONS
+// ═══════════════════════════════════════════
+function renderQuestion(idx) {
+  currentQ = idx;
+  const q = QUESTIONS[idx];
+  const total = QUESTIONS.length;
+
+  // Progress
+  document.getElementById("progress-text").textContent = `${idx+1} / ${total}`;
+  document.getElementById("progress-fill").style.width = `${((idx+1)/total)*100}%`;
+
+  // Build HTML
+  const wrap = document.getElementById("question-wrap");
+  wrap.innerHTML = `
+    <div class="card slide-in">
+      <div class="question-num">Q${idx+1} &nbsp;/&nbsp; ${total}</div>
+      <div class="question-text">${q.text}</div>
+      <div class="options-list">
+        ${q.options.map(opt => `
+          <div class="option-item">
+            <input type="radio" name="q${idx}" id="q${idx}_${opt.letter}" value="${opt.letter}"
+              ${answers[idx]===opt.letter ? "checked" : ""}
+              onchange="selectAnswer(${idx},'${opt.letter}')">
+            <label for="q${idx}_${opt.letter}">
+              <span class="option-letter">${opt.letter}</span>
+              <span>${opt.text}</span>
+            </label>
+          </div>
+        `).join("")}
+      </div>
+      <div class="error-msg" id="err-q" style="margin-top:12px"></div>
+    </div>
+  `;
+
+  // Nav buttons
+  document.getElementById("btn-prev").style.display = idx === 0 ? "none" : "inline-flex";
+  const btnNext = document.getElementById("btn-next");
+  if (idx === total - 1) {
+    btnNext.textContent = "查看結果 ✦";
+    btnNext.onclick = submitQuiz;
+  } else {
+    btnNext.textContent = "下一題 →";
+    btnNext.onclick = nextQ;
+  }
+}
+
+function selectAnswer(idx, letter) {
+  answers[idx] = letter;
+  // Auto advance after short delay
+  if (idx < QUESTIONS.length - 1) {
+    setTimeout(() => nextQ(), 400);
+  }
+}
+
+function nextQ() {
+  if (answers[currentQ] === null) {
+    const err = document.getElementById("err-q");
+    err.textContent = "請選擇一個選項後再繼續";
+    err.style.display = "block";
+    return;
+  }
+  renderQuestion(currentQ + 1);
+}
+
+function prevQ() {
+  if (currentQ > 0) renderQuestion(currentQ - 1);
+}
+
+// ═══════════════════════════════════════════
+// SUBMIT & RESULT
+// ═══════════════════════════════════════════
+function submitQuiz() {
+  if (answers[currentQ] === null) {
+    const err = document.getElementById("err-q");
+    err.textContent = "請選擇一個選項後再繼續";
+    err.style.display = "block";
+    return;
+  }
+
+  // Count
+  const counts = {A:0,B:0,C:0,D:0,E:0};
+  answers.forEach(a => { if(a && counts.hasOwnProperty(a)) counts[a]++; });
+
+  const maxCount = Math.max(...Object.values(counts));
+  const topTypes = Object.keys(counts).filter(k => counts[k] === maxCount);
+
+  // Show result
+  document.getElementById("quiz-section").style.display = "none";
+  document.getElementById("result-section").style.display = "block";
+  window.scrollTo(0,0);
+
+  // Primary type (first top)
+  const primary = topTypes[0];
+  document.getElementById("res-icon").textContent = TYPES[primary].icon;
+  document.getElementById("res-name").textContent = TYPES[primary].name;
+  document.getElementById("res-subtitle").textContent =
+    topTypes.length > 1 ? "並列主要財務人格類型" : "你的主要財務人格類型";
+
+  if (topTypes.length > 1) {
+    document.getElementById("tie-notice").style.display = "block";
+  }
+
+  // Score bars
+  const barsEl = document.getElementById("score-bars");
+  barsEl.innerHTML = ["A","B","C","D","E"].map(l => `
+    <div class="score-row">
+      <span class="score-letter">${l}</span>
+      <div class="score-bar-wrap">
+        <div class="score-bar" id="bar-${l}" data-count="${counts[l]}" data-max="${maxCount}"></div>
+      </div>
+      <span class="score-num">${counts[l]}</span>
+    </div>
+  `).join("");
+
+  // Animate bars
+  setTimeout(() => {
+    ["A","B","C","D","E"].forEach(l => {
+      const bar = document.getElementById(`bar-${l}`);
+      const pct = maxCount > 0 ? (parseInt(bar.dataset.count)/parseInt(bar.dataset.max))*100 : 0;
+      bar.style.width = pct + "%";
+      if (parseInt(bar.dataset.count) === maxCount) {
+        bar.style.background = "linear-gradient(90deg, var(--gold), var(--gold-light))";
+      } else {
+        bar.style.background = "rgba(201,168,76,0.4)";
+      }
+    });
+  }, 100);
+
+  // Description cards
+  const descEl = document.getElementById("desc-cards");
+  descEl.innerHTML = topTypes.map(t => {
+    const tp = TYPES[t];
+    return `
+      <div class="desc-card slide-in" style="margin-bottom:16px">
+        <div class="desc-keyword">${tp.name}</div>
+        <div class="desc-body">${tp.body}</div>
+        <div class="desc-trait">✅ 金錢特質：${tp.keyword}</div>
+        <div class="desc-advice-title">專屬建議</div>
+        <div class="desc-advice-body">💡 ${tp.advice}</div>
+      </div>
+    `;
+  }).join('<div class="divider"><div class="divider-line"></div><div class="divider-icon">✦</div><div class="divider-line"></div></div>');
+
+  // Send to Google Sheet
+  sendToSheet(counts, topTypes, primary);
+}
+
+// ═══════════════════════════════════════════
+// GOOGLE SHEET
+// ═══════════════════════════════════════════
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaFkNBY3Kg2rxOeaTuYZCYURCXMZS7v3mQ6nbWbCXhH73nNg3rBvRMWE4YNIC0lKckng/exec";
+
+function sendToSheet(counts, topTypes, primary) {
+  const status = document.getElementById("submit-status");
+
+  const payload = {
+    timestamp: new Date().toISOString(),
+    name: userData.name,
+    email: userData.email,
+    gender: userData.gender,
+    age: userData.age,
+    answers: answers.join(","),
+    count_a: counts.A,
+    count_b: counts.B,
+    count_c: counts.C,
+    count_d: counts.D,
+    count_e: counts.E,
+    result: topTypes.map(t => TYPES[t].name).join("、"),
+    primary_type: primary
+  };
+
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.status === "ok") {
+      status.textContent = "✓ 資料已成功儲存";
+      status.className = "submit-status success";
+    } else {
+      throw new Error("server error");
+    }
+  })
+  .catch(() => {
+    status.textContent = "資料儲存失敗，請聯繫管理員";
+    status.className = "submit-status error";
+  });
+}
+</script>
+</body>
+</html>
