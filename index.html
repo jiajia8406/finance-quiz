@@ -112,8 +112,8 @@ input[type=number]{-moz-appearance:textfield}
 .ph{padding:26px 0 14px;text-align:center}
 .pkana{font-size:13px;letter-spacing:3px;color:var(--sf);margin-bottom:6px;font-weight:700}
 /* 大標 */
-.ptitle{font-size:24px;font-weight:700;line-height:1.45}
-/* 副標 +2號 = 17px */
+.ptitle{font-size:28px;font-weight:700;line-height:1.45}
+/* 副標 = 24px */
 .psub{font-size:24px;color:var(--sf);margin-top:5px;font-weight:700}
 
 /* quote — 24px 粗體 */
@@ -267,8 +267,8 @@ input[type=number]{-moz-appearance:textfield}
         <ellipse cx="44" cy="124" rx="13" ry="8" fill="#D4C4B0"/>
         <ellipse cx="70" cy="124" rx="13" ry="8" fill="#D4C4B0"/>
       </svg>
-      <div style="font-size:27px;font-weight:700;line-height:1.4;font-family:var(--fn)">四月份挑戰賽<br>連續30天打卡計畫</div>
-      <div style="font-size:16px;color:var(--sf);margin-top:10px;line-height:1.85">敢不敢對自己狠一個月<br>變成更好的自己</div>
+      <div style="font-size:28px;font-weight:700;line-height:1.4;font-family:var(--fn)">四月份挑戰賽<br>連續30天打卡計畫</div>
+      <div style="font-size:18px;color:var(--sf);margin-top:10px;line-height:1.85">敢不敢對自己狠一個月<br>變成更好的自己</div>
     </div>
 
     <div class="tabs">
@@ -484,7 +484,7 @@ input[type=number]{-moz-appearance:textfield}
 <div id="screen-result" class="screen">
   <div class="topbar"></div>
   <div class="rhero">
-    <h1 style="font-size:24px;font-weight:700;line-height:1.45">四月挑戰賽成果</h1>
+    <h1 style="font-size:28px;font-weight:700;line-height:1.45">四月挑戰賽成果</h1>
     <div class="rcls">這一個月，你沒有放過自己，也沒有放棄自己<br>你真的很棒，你比你想像的更強大</div>
   </div>
 
@@ -596,7 +596,7 @@ input[type=number]{-moz-appearance:textfield}
 </div>
 
 <script>
-const GAS='YOUR_GAS_DEPLOY_URL_HERE';
+const GAS='https://script.google.com/macros/s/AKfycbxSe7SP6wxi9FjNMuMs1xUy8MZPuPy7tdbzb9fA1Izsh1m6Dbi5Qc_WkfcZyKa7ZRbu/exec';
 const START=new Date('2026-04-06T00:00:00');
 const DAYS=30, DL=23;
 
@@ -641,7 +641,7 @@ const QS=[
   "好好吃飯，好好睡覺，好好說話，好好的你。",
   "變成連自己都欽佩的我！",
   "在變好的路上，有你陪著我，我也陪著你，一起前行",
-  "你做到了。真的。"
+  "這麼不容易的事情，你都做到了！"
 ];
 
 const GC=[
@@ -959,9 +959,9 @@ function rRS(){
     <div class="fseg" style="flex:${fS||.1};background:var(--or);min-width:${fS?6:0}px">${fS>3?`<span>${fS}</span>`:''}</div>
     <div class="fseg" style="flex:${fW||.1};background:var(--col);min-width:${fW?6:0}px">${fW>3?`<span>${fW}</span>`:''}</div>`;
   let insight='';
-  if(fS/fT>.4)insight=`這個月你有 ${fS} 天有意識地省下一筆錢。有意識地花錢，是財務自由的第一步。`;
-  else if(fW/fT>.4)insight=`這個月記錄了 ${fW} 次「浪費」——但誠實面對是改變的開始。知道自己在哪裡漏財，才能堵住缺口。`;
-  else insight=`你的財務記錄很均衡。${fS}次省下、${fW}次浪費、${fN}次正常——最重要的是，你開始觀察自己的金錢行為了。`;
+  if(fS/fT>.4)insight=`這個月你有 ${fS} 天有意識地省下一筆錢。 有意識地花錢，是財務自由的第一步。`;
+  else if(fW/fT>.4)insight=`這個月記錄了 ${fW} 次「浪費」——但誠實面對是改變的開始。 知道自己在哪裡漏財，才能堵住缺口。`;
+  else insight=`你的財務記錄很均衡。 ${fS}次省下、${fW}次浪費、${fN}次正常 ——最重要的是，你開始覺察自己的金錢行為了。`;
   document.getElementById('rfi').textContent=insight;
 }
 
@@ -989,7 +989,7 @@ function calcBMI(w,h){
 
 /* ── GAS ── */
 async function gas(a,d={}){
-  if(GAS==='YOUR_GAS_DEPLOY_URL_HERE') throw new Error('demo');
+  if(GAS==='https://script.google.com/macros/s/AKfycbxSe7SP6wxi9FjNMuMs1xUy8MZPuPy7tdbzb9fA1Izsh1m6Dbi5Qc_WkfcZyKa7ZRbu/exec') throw new Error('demo');
   const r=await fetch(GAS,{method:'POST',body:JSON.stringify({action:a,...d})});
   return r.json();
 }
