@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>四月挑戰賽｜30天自我養成系統</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&display=swap');
+@font-face {
+  font-family: 'ChenYuluoyan';
+  src: url('./fonts/ChenYuluoyan-Thin-Monospaced.ttf') format('truetype');
+  font-weight: normal; font-style: normal;
+}
+:root {
+  --c:#F5F0E8; --wo:#EDE8DC; --b:#F7F3EC;
+  --gb:#7B8FA1; --gbl:#B4C4D0;
+  --or:#D4896A; --col:#C4A898;
+  --co:#8B6E5A;
+  --dk:#3D3530; --md:#6B5B52; --sf:#9E8E86;
+  --ln:rgba(139,110,90,.12); --sh:rgba(61,53,48,.07);
+  --tab:#afb3ab;
+  --fn:'ChenYuluoyan','Noto Serif TC',serif;
+  --fn-body:'Noto Sans TC','PingFang TC',sans-serif;
+  --r:14px; --rm:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100vh;background:var(--c);font-family:var(--fn-body);font-weight:500;color:var(--dk);overflow-x:hidden}
+/* 辰宇落雁體：只用於大標、副標、金句、英文標籤 */
+.ptitle,.pkana,.qtxt,.qday,
+.rday,.rhero h1,.rcls,
+.calmo,.bignum,.biglbl,
+.cheer,
+#ci-day,#ci-date,
+.topbar-title{font-family:var(--fn);font-weight:700}
+/* 所有按鍵、分頁、nav 也用 Noto Sans */
+.btn,.tab,.nbtn,.fchip{font-family:var(--fn-body);font-weight:700}
+.screen{display:none;min-height:100vh;padding-bottom:90px;animation:fu .35s ease}
+.screen.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.wrap{max-width:460px;margin:0 auto;padding:0 18px}
+.topbar{height:5px;background:linear-gradient(90deg,var(--or),var(--gb),#A8B89A,#B4AACC)}
+
+/* cards */
+.card{background:#fff;border-radius:var(--rm);padding:22px 18px;margin-bottom:14px;
+  box-shadow:0 2px 18px var(--sh);border:1px solid var(--ln)}
+/* card-label — 副標題 +2號 = 14px */
+.clbl{font-size:14px;letter-spacing:2px;color:var(--sf);margin-bottom:14px;
+  text-transform:uppercase;font-weight:700}
+
+/* tabs */
+.tabs{display:flex;border:2.5px solid var(--tab);border-radius:var(--r);
+  overflow:hidden;margin-bottom:18px}
+.tab{flex:1;padding:14px 6px;background:none;border:none;font-family:var(--fn);
+  font-size:16px;font-weight:700;color:var(--tab);cursor:pointer;transition:all .2s}
+.tab.active{background:var(--tab);color:#fff}
+
+/* inputs — 內文 +1號 = 17px */
+label{display:block;font-size:16px;color:var(--md);margin-bottom:6px;font-weight:700;font-family:var(--fn-body)}
+input[type=text],input[type=number],input[type=password]{
+  width:100%;padding:14px 16px;border:1.5px solid var(--ln);border-radius:var(--r);
+  background:var(--b);font-family:var(--fn-body);font-size:17px;color:var(--dk);
+  outline:none;transition:border-color .2s;margin-bottom:14px}
+input:focus{border-color:var(--gb)}
+select{width:100%;padding:14px 16px;border:1.5px solid var(--ln);border-radius:var(--r);
+  background:var(--b);font-family:var(--fn-body);font-size:17px;color:var(--dk);
+  outline:none;margin-bottom:14px;appearance:none}
+textarea{width:100%;padding:13px 15px;border:1.5px solid var(--ln);border-radius:var(--r);
+  background:var(--b);font-family:var(--fn-body);font-size:16px;color:var(--dk);
+  resize:vertical;outline:none;line-height:1.75;transition:border-color .2s;
+  min-height:76px;margin-top:6px}
+textarea:focus{border-color:var(--gb)}
+.irow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]{-moz-appearance:textfield}
+.pnote{font-size:13px;color:var(--sf);margin-top:-8px;margin-bottom:14px}
+
+/* main button */
+.btn{width:100%;padding:17px;border:none;border-radius:var(--r);
+  background:var(--or);color:#fff;font-family:var(--fn);
+  font-size:18px;font-weight:700;letter-spacing:.5px;cursor:pointer;
+  transition:all .2s;margin-top:8px}
+.btn:hover{background:var(--co)}.btn:active{transform:scale(.98)}
+.btn:disabled{background:var(--gbl);cursor:not-allowed}
+
+/* bottom nav */
+#bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(245,240,232,.97);
+  backdrop-filter:blur(14px);border-top:1px solid var(--ln);
+  display:none;justify-content:space-around;
+  padding:10px 0 env(safe-area-inset-bottom,10px);z-index:100}
+.nbtn{display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:4px 18px;cursor:pointer;border:none;background:none;font-family:var(--fn)}
+.ni{font-size:24px}.nl{font-size:13px;letter-spacing:1px;color:var(--sf);font-weight:700}
+.nbtn.active .nl{color:var(--or)}
+
+/* toast */
+#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);
+  background:var(--dk);color:var(--c);padding:12px 22px;border-radius:var(--r);
+  font-size:15px;z-index:9998;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* loading */
+#load{position:fixed;inset:0;background:var(--c);display:flex;align-items:center;
+  justify-content:center;flex-direction:column;gap:18px;z-index:9999;transition:opacity .4s}
+.dots{display:flex;gap:7px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--col);
+  animation:bounce 1.2s infinite ease-in-out}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-9px)}}
+
+/* page header */
+.ph{padding:26px 0 14px;text-align:center}
+.pkana{font-size:13px;letter-spacing:3px;color:var(--sf);margin-bottom:6px;font-weight:700}
+/* 大標 */
+.ptitle{font-size:24px;font-weight:700;line-height:1.45}
+/* 副標 +2號 = 17px */
+.psub{font-size:24px;color:var(--sf);margin-top:5px;font-weight:700}
+
+/* quote — 24px 粗體 */
+.qcard{background:var(--dk);color:var(--c);border-radius:var(--rm);
+  padding:26px 22px;margin-bottom:14px;position:relative;overflow:hidden}
+.qcard::before{content:'❝';position:absolute;top:-12px;left:14px;
+  font-size:90px;opacity:.08;line-height:1;pointer-events:none}
+.qday{font-size:13px;letter-spacing:3px;color:#B4C4D0;margin-bottom:10px;font-weight:700}
+.qtxt{font-size:24px;line-height:1.85;position:relative;z-index:1;font-weight:700}
+
+/* calendar */
+.calwrap{background:#fff;border-radius:var(--rm);padding:16px;margin-bottom:14px;
+  box-shadow:0 2px 18px var(--sh);border:1px solid var(--ln)}
+.calmo{text-align:center;font-size:14px;letter-spacing:2px;color:var(--sf);
+  margin-bottom:10px;font-weight:700}
+.caldow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:5px}
+.caldow span{text-align:center;font-size:12px;color:var(--sf);font-weight:700}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.ccell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:10px}
+.ccell.today{outline:2.5px solid var(--or);outline-offset:1px}
+.ccell.future{opacity:.22}
+
+/* checkin items — 內文 16px */
+.ci{display:flex;align-items:flex-start;gap:13px;padding:15px 0;border-bottom:1px solid var(--ln)}
+.ci:last-child{border-bottom:none}
+.cbox{width:26px;height:26px;min-width:26px;border:2.5px solid var(--col);
+  border-radius:7px;display:flex;align-items:center;justify-content:center;
+  font-size:15px;margin-top:2px;cursor:pointer;transition:all .2s}
+.cbox.on{background:var(--dk);border-color:var(--dk);color:var(--c)}
+.clab{font-size:16px;line-height:1.55;flex:1}
+.csub{font-size:13px;color:var(--sf);margin-top:3px}
+
+/* finance chips */
+.fchips{display:flex;gap:9px;flex-wrap:wrap;margin:8px 0}
+.fchip{padding:10px 18px;border:2px solid var(--dk);border-radius:22px;
+  font-size:15px;font-family:var(--fn);font-weight:700;
+  background:none;color:var(--dk);cursor:pointer;transition:all .2s}
+.fchip.on{background:var(--dk);color:var(--c)}
+
+/* deadline banner */
+.dbanner{background:var(--col);color:var(--dk);padding:13px 16px;
+  border-radius:var(--r);font-size:15px;text-align:center;
+  margin-bottom:14px;line-height:1.6;font-weight:700}
+
+/* ring */
+.rarea{display:flex;flex-direction:column;align-items:center;padding:18px 0}
+.rwrap{position:relative;width:130px;height:130px}
+.rwrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.rtrack{fill:none;stroke:var(--wo);stroke-width:9}
+.rfill{fill:none;stroke:var(--or);stroke-width:9;stroke-linecap:round;
+  transition:stroke-dashoffset 1.1s ease}
+.rcenter{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center}
+.rpct{font-size:30px;font-weight:700}
+.rlbl{font-size:13px;color:var(--sf);letter-spacing:1px;font-weight:700}
+.srow{display:flex;gap:22px;margin-top:16px;text-align:center}
+.sv{font-size:24px;font-weight:700}.sl{font-size:13px;color:var(--sf);font-weight:700}
+
+/* bars */
+.ibar{margin-bottom:13px}
+.ibh{display:flex;justify-content:space-between;margin-bottom:5px}
+.ibn{font-size:15px;font-weight:700}.ibc{font-size:13px;color:var(--sf)}
+.btrack{height:7px;background:var(--wo);border-radius:4px;overflow:hidden}
+.bfill{height:100%;border-radius:4px;
+  background:linear-gradient(90deg,var(--gb),var(--or));transition:width .9s ease}
+
+/* rank */
+.rankrow{display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid var(--ln)}
+.rankrow:last-child{border-bottom:none}
+.rnum{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:700;
+  background:var(--wo);color:var(--md);flex-shrink:0}
+.rnum.g{background:#E8C97A;color:#7A5C00}
+.rnum.s{background:#C8C8C8;color:#5A5A5A}
+.rnum.b{background:#D4A07A;color:#5A3A1A}
+.rinfo{flex:1}
+.rnm{font-size:16px;font-weight:700}
+.rsub{font-size:13px;color:var(--sf);margin-top:2px}
+.rankrow.me{background:var(--wo);border-radius:var(--r);padding:14px 12px;margin:0 -12px}
+
+/* timeline */
+.tle{display:flex;gap:13px;margin-bottom:18px}
+.tldc{display:flex;flex-direction:column;align-items:center}
+.tld{width:10px;height:10px;border-radius:50%;background:var(--or);flex-shrink:0;margin-top:4px}
+.tll{flex:1;width:1px;background:var(--ln);margin-top:3px}
+.tldate{font-size:13px;color:var(--sf);margin-bottom:3px;font-weight:700}
+.tltext{font-size:15px;line-height:1.75}
+.tlbs{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.tlb{font-size:12px;padding:3px 9px;background:var(--wo);border-radius:10px;color:var(--sf)}
+
+/* cheer bubble */
+.cheer{background:var(--or);color:#fff;border-radius:18px 18px 18px 4px;
+  padding:12px 20px;font-size:17px;font-weight:700;display:inline-block}
+
+/* result hero */
+.rhero{background:var(--dk);padding:46px 22px 38px;text-align:center;color:var(--c)}
+.rday{font-size:13px;letter-spacing:3px;color:#B4C4D0;margin-bottom:13px;font-weight:700}
+.rhero h1{font-size:25px;line-height:1.65;font-weight:700}
+.rcls{font-size:16px;color:#B4C4D0;margin-top:14px;line-height:1.85}
+.bignum{font-size:58px;line-height:1;font-weight:700}
+.biglbl{font-size:14px;color:var(--sf);letter-spacing:1px;margin-top:4px;font-weight:700}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sbox{background:var(--wo);border-radius:var(--r);padding:16px;text-align:center}
+.sbox .v{font-size:24px;font-weight:700}
+.sbox .l{font-size:13px;color:var(--sf);letter-spacing:.5px;margin-top:3px}
+.fbar{display:flex;height:24px;border-radius:12px;overflow:hidden;gap:2px}
+.fseg{transition:flex .9s ease;display:flex;align-items:center;justify-content:center}
+.fseg span{font-size:11px;color:#fff;font-weight:700}
+.fleg{display:flex;gap:14px;margin-top:9px;flex-wrap:wrap}
+.fl{display:flex;align-items:center;gap:5px;font-size:14px;color:var(--md);font-weight:700}
+.fld{width:9px;height:9px;border-radius:50%}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--col);border-radius:2px}
+</style>
+</head>
+<body>
+
+<div id="load">
+  <div style="font-size:23px;color:var(--dk);font-weight:700;font-family:var(--fn)">四月挑戰賽</div>
+  <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+</div>
+<div id="toast"></div>
+
+<!-- ══════════ AUTH ══════════ -->
+<div id="screen-auth" class="screen active">
+  <div class="topbar"></div>
+  <div class="wrap">
+    <div style="padding:36px 0 18px;text-align:center">
+      <!-- 登入角色：無帽子，右手舉長方形旗，旗內寫GO -->
+      <svg width="130" height="140" viewBox="0 0 130 140" fill="none" style="margin-bottom:12px">
+        <!-- 耳朵 -->
+        <ellipse cx="26" cy="44" rx="9" ry="7" fill="#D4C4B0" transform="rotate(-18 26 44)"/>
+        <ellipse cx="88" cy="44" rx="9" ry="7" fill="#D4C4B0" transform="rotate(18 88 44)"/>
+        <!-- 身體 -->
+        <ellipse cx="57" cy="84" rx="40" ry="44" fill="white" stroke="#D8CFC4" stroke-width="2"/>
+        <!-- 臉 -->
+        <circle cx="46" cy="75" r="3.8" fill="#3D3530"/>
+        <circle cx="68" cy="75" r="3.8" fill="#3D3530"/>
+        <rect x="42" y="87" width="30" height="4.5" rx="2.2" fill="#3D3530"/>
+        <!-- 右手臂舉旗 -->
+        <path d="M88 100 Q104 84 100 64" stroke="#D4C4B0" stroke-width="11" stroke-linecap="round" fill="none"/>
+        <!-- 旗桿 -->
+        <line x1="100" y1="36" x2="100" y2="64" stroke="#C4A898" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- 長方形旗子 -->
+        <rect x="100" y="36" width="28" height="20" rx="3" fill="#EDE0C0"/>
+        <rect x="100" y="36" width="28" height="20" rx="3" stroke="#C4A070" stroke-width="1.2" fill="none"/>
+        <text x="114" y="51" font-size="11" font-weight="bold" fill="#8B6E5A" text-anchor="middle" font-family="serif">GO</text>
+        <!-- 腳 -->
+        <ellipse cx="44" cy="124" rx="13" ry="8" fill="#D4C4B0"/>
+        <ellipse cx="70" cy="124" rx="13" ry="8" fill="#D4C4B0"/>
+      </svg>
+      <div style="font-size:27px;font-weight:700;line-height:1.4;font-family:var(--fn)">四月份挑戰賽<br>連續30天打卡計畫</div>
+      <div style="font-size:16px;color:var(--sf);margin-top:10px;line-height:1.85">敢不敢對自己狠一個月<br>變成更好的自己</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="authTab('login')">我已加入</button>
+      <button class="tab" onclick="authTab('register')">初次參加</button>
+    </div>
+
+    <!-- 登入：第二次起只需 PIN -->
+    <div id="form-login">
+      <div class="card">
+        <div class="clbl">輸入你的 PIN 登入</div>
+        <div id="saved-name-hint" style="display:none;font-size:17px;color:var(--md);margin-bottom:14px;font-weight:700">
+          歡迎回來，<span id="saved-name-display"></span>！
+        </div>
+        <div id="login-name-row">
+          <label>暱稱</label>
+          <input type="text" id="l-name" placeholder="你的暱稱" maxlength="20">
+        </div>
+        <label>PIN（4位數字）</label>
+        <input type="password" id="l-pin" placeholder="••••" maxlength="4" inputmode="numeric">
+        <button class="btn" onclick="doLogin()">進入挑戰</button>
+        <div style="text-align:center;margin-top:12px">
+          <span style="font-size:13px;color:var(--sf);cursor:pointer;text-decoration:underline"
+            onclick="clearSavedUser()">不是我，換人登入</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 注册 -->
+    <div id="form-register" style="display:none">
+      <div class="card">
+        <div class="clbl">建立你的檔案</div>
+        <label>暱稱</label>
+        <input type="text" id="r-name" placeholder="給自己一個名字" maxlength="20">
+        <label>性別</label>
+        <select id="r-gender">
+          <option value="">請選擇</option>
+          <option value="female">女</option>
+          <option value="male">男</option>
+          <option value="other">不公開</option>
+        </select>
+        <div class="irow">
+          <div><label>年齡</label><input type="number" id="r-age" placeholder="歲" min="10" max="99"></div>
+          <div><label>身高 cm</label><input type="number" id="r-height" placeholder="cm" min="100" max="250"></div>
+        </div>
+        <label>體重 kg（只有自己看得到）</label>
+        <input type="number" id="r-weight" placeholder="kg" min="30" max="300" step="0.1">
+        <label>設定 PIN（4位數字）</label>
+        <input type="password" id="r-pin" placeholder="••••" maxlength="4" inputmode="numeric">
+        <p class="pnote">每次登入需要此PIN，請記住</p>
+        <button class="btn" onclick="doRegister()">加入挑戰 🌱</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 打卡頁 ══════════ -->
+<div id="screen-checkin" class="screen">
+  <div class="topbar"></div>
+  <div class="wrap">
+    <div class="ph">
+      <div class="pkana">APRIL CHALLENGE</div>
+      <div class="ptitle" id="ci-day">Day 1</div>
+      <div class="psub" id="ci-date"></div>
+    </div>
+
+    <div class="qcard">
+      <div class="qday" id="q-day"></div>
+      <div class="qtxt" id="q-txt"></div>
+    </div>
+
+    <div class="calwrap">
+      <div class="calmo">四月挑戰賽 · 2026</div>
+      <div class="caldow">
+        <span>一</span><span>二</span><span>三</span><span>四</span>
+        <span>五</span><span>六</span><span>日</span>
+      </div>
+      <div class="calgrid" id="calgrid"></div>
+    </div>
+
+    <div id="dbanner" class="dbanner" style="display:none">
+      ⏰ 今日打卡已截止（23:00）<br>明天再繼續加油 🌙
+    </div>
+
+    <div class="card">
+      <div class="clbl">今日七項打卡</div>
+      <div id="ci-items"></div>
+    </div>
+
+    <div class="card">
+      <div class="clbl">今日財務狀況</div>
+      <div style="font-size:16px;color:var(--md);margin-bottom:8px;font-weight:700">今天的花錢狀態是？</div>
+      <div class="fchips">
+        <button class="fchip" onclick="pickF('normal',this)">正常花費</button>
+        <button class="fchip" onclick="pickF('save',this)">省下一筆 💰</button>
+        <button class="fchip" onclick="pickF('waste',this)">浪費一筆 😅</button>
+      </div>
+      <label style="margin-top:10px">記錄一句話</label>
+      <textarea id="f-note" placeholder="簡單記一句：今天花了什麼、或省了什麼⋯" rows="2"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="clbl">今日複盤</div>
+      <label>✅ 今天做得好的一件事</label>
+      <textarea id="r-good" placeholder="哪怕只是喝了水、早睡了⋯" rows="2"></textarea>
+      <label style="margin-top:14px">❌ 今天做不好的一件事</label>
+      <textarea id="r-bad" placeholder="誠實面對，不是批判自己" rows="2"></textarea>
+      <label style="margin-top:14px">💡 怎樣可以更好？</label>
+      <textarea id="r-better" placeholder="一個小小的改變就夠了" rows="2"></textarea>
+    </div>
+
+    <div style="padding:14px 0">
+      <button class="btn" id="sbtn" onclick="doSubmit()">提交今日打卡</button>
+      <div style="text-align:center;font-size:14px;color:var(--sf);margin-top:10px;font-weight:700">每日 23:00 截止，不可補填</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 進度牆 ══════════ -->
+<div id="screen-progress" class="screen">
+  <div class="topbar"></div>
+  <div class="wrap">
+    <div class="ph">
+      <div class="pkana">PROGRESS WALL</div>
+      <div class="ptitle">進度牆</div>
+    </div>
+
+    <!-- 握拳努力角色 -->
+    <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:18px;padding:0 4px">
+      <svg width="95" height="115" viewBox="0 0 100 120" fill="none">
+        <ellipse cx="26" cy="40" rx="8" ry="6" fill="#D4C4B0" transform="rotate(-18 26 40)"/>
+        <ellipse cx="74" cy="40" rx="8" ry="6" fill="#D4C4B0" transform="rotate(18 74 40)"/>
+        <ellipse cx="50" cy="68" rx="34" ry="37" fill="white" stroke="#D8CFC4" stroke-width="2"/>
+        <circle cx="42" cy="60" r="3.2" fill="#3D3530"/>
+        <circle cx="58" cy="60" r="3.2" fill="#3D3530"/>
+        <path d="M40 73 Q50 70 60 73" stroke="#3D3530" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+        <path d="M24 80 Q14 90 16 102" stroke="#D4C4B0" stroke-width="10" stroke-linecap="round" fill="none"/>
+        <rect x="8" y="100" width="18" height="14" rx="7" fill="#D4C4B0"/>
+        <line x1="12" y1="102" x2="12" y2="112" stroke="#C4A898" stroke-width="1" opacity=".6"/>
+        <line x1="16" y1="102" x2="16" y2="112" stroke="#C4A898" stroke-width="1" opacity=".6"/>
+        <line x1="20" y1="102" x2="20" y2="112" stroke="#C4A898" stroke-width="1" opacity=".6"/>
+        <path d="M76 78 Q88 65 86 50" stroke="#D4C4B0" stroke-width="10" stroke-linecap="round" fill="none"/>
+        <rect x="78" y="36" width="18" height="14" rx="7" fill="#D4C4B0"/>
+        <line x1="82" y1="38" x2="82" y2="48" stroke="#C4A898" stroke-width="1" opacity=".6"/>
+        <line x1="86" y1="38" x2="86" y2="48" stroke="#C4A898" stroke-width="1" opacity=".6"/>
+        <line x1="90" y1="38" x2="90" y2="48" stroke="#C4A898" stroke-width="1" opacity=".6"/>
+        <ellipse cx="26" cy="46" rx="3" ry="5" fill="#B4C4D0" opacity=".7" transform="rotate(-20 26 46)"/>
+        <ellipse cx="20" cy="57" rx="2" ry="4" fill="#B4C4D0" opacity=".5" transform="rotate(-15 20 57)"/>
+        <ellipse cx="38" cy="103" rx="11" ry="6.5" fill="#D4C4B0"/>
+        <ellipse cx="62" cy="103" rx="11" ry="6.5" fill="#D4C4B0"/>
+      </svg>
+      <div style="margin-bottom:20px">
+        <div class="cheer">加油！你可以的！</div>
+
+      </div>
+    </div>
+
+    <div class="tabs" id="pg-tabs">
+      <button class="tab active" onclick="pgTab(0)">我的進度</button>
+      <button class="tab" onclick="pgTab(1)">排行榜</button>
+      <button class="tab" onclick="pgTab(2)">我的復盤</button>
+    </div>
+
+    <div id="pg0">
+      <div class="card">
+        <div style="padding:8px 0 4px;text-align:center">
+          <div style="font-size:13px;letter-spacing:2px;color:var(--sf);margin-bottom:16px;font-weight:700;font-family:var(--fn)">TODAY</div>
+          <div style="display:flex;justify-content:space-around;align-items:center;padding:0 8px">
+            <div style="text-align:center">
+              <div style="font-size:48px;font-weight:700;color:var(--dk);font-family:var(--fn-body);line-height:1" id="today-score">0</div>
+              <div style="font-size:13px;color:var(--sf);margin-top:4px;font-weight:500">今日得分</div>
+            </div>
+            <div style="width:1px;height:50px;background:var(--ln)"></div>
+            <div style="text-align:center">
+              <div style="font-size:48px;font-weight:700;color:var(--or);font-family:var(--fn-body);line-height:1" id="today-pct">0%</div>
+              <div style="font-size:13px;color:var(--sf);margin-top:4px;font-weight:500">今日完成率</div>
+            </div>
+            <div style="width:1px;height:50px;background:var(--ln)"></div>
+            <div style="text-align:center">
+              <div style="font-size:48px;font-weight:700;color:var(--gb);font-family:var(--fn-body);line-height:1" id="today-rank">--</div>
+              <div style="font-size:13px;color:var(--sf);margin-top:4px;font-weight:500">今日排行</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="clbl">各項累積進度</div>
+        <div id="ibars"></div>
+      </div>
+    </div>
+
+    <div id="pg1" style="display:none">
+      <div class="card">
+        <div class="clbl">累積完成率排行</div>
+        <div id="rklist">
+          <div style="text-align:center;padding:22px;color:var(--sf);font-size:15px">載入中⋯</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pg2" style="display:none">
+      <div class="card">
+        <div class="clbl">這一個月，你寫下了⋯</div>
+        <div id="jtl">
+          <div style="text-align:center;padding:22px;color:var(--sf);font-size:15px">還沒有復盤紀錄</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 成果頁 ══════════ -->
+<div id="screen-result" class="screen">
+  <div class="topbar"></div>
+  <div class="rhero">
+    <h1 style="font-size:24px;font-weight:700;line-height:1.45">四月挑戰賽成果</h1>
+    <div class="rcls">這一個月，你沒有放過自己，也沒有放棄自己<br>你真的很棒，你比你想像的更強大</div>
+  </div>
+
+  <!-- 成果角色 -->
+  <div style="display:flex;justify-content:center;margin:22px 0 6px">
+    <svg width="135" height="158" viewBox="0 0 140 158" fill="none">
+      <!-- 耳朵 -->
+      <ellipse cx="28" cy="54" rx="9" ry="7" fill="#D4C4B0" transform="rotate(-18 28 54)"/>
+      <ellipse cx="96" cy="54" rx="9" ry="7" fill="#D4C4B0" transform="rotate(18 96 54)"/>
+      <!-- 身體橢圓 -->
+      <ellipse cx="62" cy="90" rx="42" ry="46" fill="white" stroke="#D8CFC4" stroke-width="2"/>
+      <!-- 臉 -->
+      <circle cx="50" cy="80" r="3.5" fill="#3D3530"/>
+      <circle cx="74" cy="80" r="3.5" fill="#3D3530"/>
+      <!-- 嘴巴微笑，在眼睛下方適當距離 -->
+      <path d="M48 95 Q62 106 76 95" stroke="#3D3530" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      <!-- 左手臂（抱獎盃） -->
+      <path d="M24 106 Q11 96 15 82" stroke="#D4C4B0" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <!-- 小獎盃（左手） -->
+      <rect x="2" y="60" width="18" height="15" rx="5" fill="#D4A830"/>
+      <rect x="0" y="58" width="22" height="6" rx="3" fill="#E8C97A"/>
+      <rect x="7" y="75" width="8" height="5" rx="1.5" fill="#D4A830"/>
+      <rect x="3" y="80" width="16" height="3.5" rx="1.5" fill="#D4A830"/>
+      <path d="M2 68 Q-3 72 2 76" stroke="#D4A830" stroke-width="2" fill="none"/>
+      <path d="M20 68 Q25 72 20 76" stroke="#D4A830" stroke-width="2" fill="none"/>
+      <text x="11" y="71" font-size="7" font-weight="bold" fill="#E8C97A" text-anchor="middle">1</text>
+      <!-- 右手臂（舉獎牌） -->
+      <path d="M102 98 Q116 80 112 60" stroke="#D4C4B0" stroke-width="10" stroke-linecap="round" fill="none"/>
+      <!-- 獎牌繩 -->
+      <path d="M112 42 Q116 52 112 60" stroke="#C4A898" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <!-- 獎牌圓 -->
+      <circle cx="112" cy="36" r="15" fill="#E8C97A"/>
+      <circle cx="112" cy="36" r="11" fill="#D4A830"/>
+      <text x="112" y="41" font-size="12" font-weight="bold" fill="#E8C97A" text-anchor="middle" font-family="serif">1</text>
+      <!-- 閃光 -->
+      <text x="127" y="26" font-size="12" fill="#E8C97A">✦</text>
+      <text x="123" y="18" font-size="8" fill="#E8C97A">✦</text>
+      <!-- 腳 -->
+      <ellipse cx="48" cy="132" rx="13" ry="8" fill="#D4C4B0"/>
+      <ellipse cx="76" cy="132" rx="13" ry="8" fill="#D4C4B0"/>
+    </svg>
+  </div>
+
+  <div class="wrap">
+    <div class="card" style="text-align:center;padding:26px">
+      <div class="bignum" id="res-rate">0%</div>
+      <div class="biglbl">總完成率</div>
+    </div>
+    <div class="card">
+      <div class="clbl">累積紀錄</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="sbox"><div class="v" id="res-total-score">0</div><div class="l">累積得分</div></div>
+        <div class="sbox"><div class="v" id="res-streak">0</div><div class="l">連續天數</div></div>
+        <div class="sbox"><div class="v" id="res-days">0</div><div class="l">打卡天數</div></div>
+        <div class="sbox"><div class="v" id="res-rank">--</div><div class="l">排行名次</div></div>
+      </div>
+    </div>
+
+    <!-- 體重輸入 + 比較（成果頁專用） -->
+    <div class="card">
+      <div class="clbl">🏆 參賽者累積達成率</div>
+      <div id="res-leaderboard">
+        <div style="text-align:center;padding:18px;color:var(--sf);font-size:15px">載入中⋯</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="clbl">今日身體數據</div>
+      <label>今日體重 kg</label>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+        <input type="number" id="final-weight" placeholder="輸入今日體重" min="30" max="300" step="0.1"
+          style="margin-bottom:0;flex:1">
+        <button onclick="calcBodyChange()"
+          style="padding:14px 18px;background:var(--or);color:#fff;border:none;border-radius:var(--r);
+          font-family:var(--fn-body);font-size:16px;font-weight:700;cursor:pointer;white-space:nowrap">計算</button>
+      </div>
+      <div class="sgrid">
+        <div class="sbox"><div class="v" id="rws">--</div><div class="l">起始體重 kg</div></div>
+        <div class="sbox"><div class="v" id="rwn">--</div><div class="l">今日體重 kg</div></div>
+        <div class="sbox"><div class="v" id="rbs">--</div><div class="l">起始 BMI</div></div>
+        <div class="sbox"><div class="v" id="rbn">--</div><div class="l">今日 BMI</div></div>
+      </div>
+      <div id="weight-change-msg" style="margin-top:14px;font-size:15px;line-height:1.75;
+        color:var(--md);text-align:center;font-weight:500"></div>
+    </div>
+
+    <div class="card">
+      <div class="clbl">七大項目完成</div>
+      <div id="ritems"></div>
+    </div>
+
+    <div class="card">
+      <div class="clbl">💰 你的財務行為分佈</div>
+      <div class="fbar" id="rfbar"></div>
+      <div class="fleg">
+        <div class="fl"><div class="fld" style="background:var(--gb)"></div>正常花費</div>
+        <div class="fl"><div class="fld" style="background:var(--or)"></div>省下一筆</div>
+        <div class="fl"><div class="fld" style="background:var(--col)"></div>浪費一筆</div>
+      </div>
+      <div id="rfi" style="margin-top:13px;font-size:15px;line-height:1.75;color:var(--md)"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ NAV ══════════ -->
+<div id="bnav">
+  <button class="nbtn active" id="nav-checkin" onclick="go('checkin')">
+    <span class="ni">📋</span><span class="nl">今日打卡</span>
+  </button>
+  <button class="nbtn" id="nav-progress" onclick="go('progress')">
+    <span class="ni">📈</span><span class="nl">進度牆</span>
+  </button>
+  <button class="nbtn" id="nav-result" onclick="go('result')">
+    <span class="ni">🏆</span><span class="nl">成果</span>
+  </button>
+</div>
+
+<script>
+const GAS='YOUR_GAS_DEPLOY_URL_HERE';
+const START=new Date('2026-04-06T00:00:00');
+const DAYS=30, DL=23;
+
+const ITEMS=[
+  {id:'water',   e:'💧', t:'今天有喝滿 1800cc 水'},
+  {id:'diet',    e:'🥗', t:'今天沒有喝含糖飲料，也沒有吃炸物'},
+  {id:'sleep',   e:'🌙', t:'今天有睡滿 7–8 小時'},
+  {id:'exercise',e:'🏃', t:'今天有運動 30 分鐘'},
+  {id:'read',    e:'📖', t:'今天有閱讀 10 頁'},
+  {id:'finance', e:'💰', t:'今天有愛惜錢錢', sub:'打勾後請選擇類型並記錄'},
+  {id:'reflect', e:'🪞', t:'今天有完成複盤',  sub:'打勾後請填寫下方複盤'},
+];
+
+/* 完全按照原始金句文字與標點，30句固定順序 */
+const QS=[
+  "沒有奇蹟，只有累積",
+  "別等狀態好才開始，開始了，狀態才會慢慢變好",
+  "不要擔心結果如何，先把今天該做的做好",
+  "與其等待未來，不如現在就開始創造",
+  "當你失去動力時，想想你是為了什麼而開始",
+  "如果蚊子吸的是脂肪，我保證以後都不殺牠了",
+  "請相信自己，絕對做得到",
+  "能讓你變好的，過程都不會太輕鬆",
+  "你可以放慢，但不要放爛",
+  "很多努力似乎都是這個樣子，看似在原地，不代表沒有前進。",
+  "有一種很棒，是你明明很想偷懶，但還是堅持下去。",
+  "別低估連續做對小事的力量",
+  "覺得好累好辛苦的時候，停下腳步、低下頭，你會看見⋯⋯雙下巴",
+  "再堅持一下，一切美好正在奔向你",
+  "對不起，人生沒有那麼多奇蹟，你不要再心存僥倖了",
+  "如果你停下來了，就永遠達不到終點了",
+  "能耐著性子持續重複的人，終能拉開差距。",
+  "你不是在跟別人比，你是在決定自己要成為什麼樣的人",
+  "盲目自信＋立刻行動-外界噪音＝開掛人生",
+  "發福總是比發財輕鬆",
+  "努力讓自己發光，對的人就會仰光而來",
+  "無論你今天完成了什麼，都請為自己感到驕傲。",
+  "別再說你很普通了，請回頭看看，你進步了多少。",
+  "沒什麼事過不了的，看看你都順利長到這歲數了～",
+  "不要害怕重新開始，因為這一次，你不是從頭開始，而是從有經驗開始。",
+  "嘴巴長在別人身上，你只能照顧好自己的心",
+  "好好吃飯，好好睡覺，好好說話，好好的你。",
+  "變成連自己都欽佩的我！",
+  "在變好的路上，有你陪著我，我也陪著你，一起前行",
+  "你做到了。真的。"
+];
+
+const GC=[
+  {b:'#E8C4B0',r:'#C4986A',l:'#D4A890'},
+  {b:'#B8C8D4',r:'#7B8FA1',l:'#9CAEBF'},
+  {b:'#C4D0B8',r:'#8B9E7A',l:'#AABF96'},
+  {b:'#CEC4D8',r:'#9E8FA8',l:'#BFAECA'},
+  {b:'#D4D0B8',r:'#A89E7A',l:'#C4BC96'},
+  {b:'#C4B8B8',r:'#A07878',l:'#B89898'},
+  {b:'#B8D0C8',r:'#7AA896',l:'#96BFAE'},
+];
+
+let me=null,logs=[],users=[],ck={},ft='';
+
+window.addEventListener('load',async()=>{
+  /* 檢查是否有已儲存用戶，有則隱藏暱稱欄位 */
+  const saved=localStorage.getItem('apr_u');
+  if(saved){
+    try{
+      const u=JSON.parse(saved);
+      /* 顯示「歡迎回來」並隱藏暱稱輸入 */
+      document.getElementById('saved-name-hint').style.display='block';
+      document.getElementById('saved-name-display').textContent=u.name;
+      document.getElementById('login-name-row').style.display='none';
+      me=u; await ld(); showApp();
+    }catch(e){localStorage.removeItem('apr_u');}
+  }
+  setTimeout(()=>{
+    const e=document.getElementById('load');
+    e.style.opacity='0';setTimeout(()=>e.style.display='none',400);
+  },700);
+});
+
+function clearSavedUser(){
+  localStorage.removeItem('apr_u');
+  document.getElementById('saved-name-hint').style.display='none';
+  document.getElementById('login-name-row').style.display='block';
+  document.getElementById('l-name').value='';
+  document.getElementById('l-pin').value='';
+  me=null;
+}
+
+function authTab(t){
+  document.querySelectorAll('#screen-auth .tab').forEach((b,i)=>
+    b.classList.toggle('active',(i===0)===(t==='login')));
+  document.getElementById('form-login').style.display=t==='login'?'block':'none';
+  document.getElementById('form-register').style.display=t==='register'?'block':'none';
+}
+
+async function doRegister(){
+  const name=g('r-name'),gender=g('r-gender'),age=+g('r-age'),
+        height=+g('r-height'),weight=+g('r-weight'),pin=g('r-pin');
+  if(!name) return tk('請輸入暱稱');
+  if(!/^\d{4}$/.test(pin)) return tk('PIN 需為 4 位數字');
+  if(!height||!weight) return tk('請輸入身高與體重');
+  try{
+    const r=await gas('register',{name,gender,age,height,weight,pin});
+    if(!r.success) return tk(r.message||'注冊失敗');
+    me={id:r.userId,name,height,ws:weight};sv();await ld();showApp();tk(`歡迎加入，${name}！🌱`);
+  }catch(e){
+    me={id:'demo_'+Date.now(),name,height,ws:weight};sv();showApp();tk(`歡迎加入，${name}！（展示模式）`);
+  }
+}
+
+async function doLogin(){
+  const pin=g('l-pin');
+  /* 若有已儲存用戶，只需PIN */
+  let name='';
+  if(me){
+    name=me.name;
+  } else {
+    name=g('l-name');
+  }
+  if(!name) return tk('請輸入暱稱');
+  if(pin.length!==4) return tk('請輸入 4 位數 PIN');
+  try{
+    const r=await gas('login',{name,pin});
+    if(!r.success) return tk(r.message||'暱稱或 PIN 錯誤');
+    me={id:r.userId,name,height:r.height,ws:r.weight};sv();await ld();showApp();tk(`歡迎回來，${name}！`);
+  }catch(e){
+    if(!me) me={id:'demo_local',name,height:165,ws:60};
+    sv();showApp();tk('登入成功（展示模式）');
+  }
+}
+
+async function ld(){
+  try{
+    const r=await gas('getLogs',{userId:me.id});
+    logs=r.logs||[];users=r.users||[];
+    const tl=ml().find(l=>l.date===ts());
+    if(tl){ck=pi(tl.items);ft=tl.financeType||'';}
+  }catch(e){logs=ll();users=[];}
+}
+function ml(){return logs.filter(l=>l.userId===me.id)}
+function ll(){try{return JSON.parse(localStorage.getItem('apr_l_'+me.id)||'[]')}catch{return[]}}
+function sl(log){const ls=ll();const i=ls.findIndex(l=>l.date===log.date);
+  if(i>=0)ls[i]=log;else ls.push(log);
+  localStorage.setItem('apr_l_'+me.id,JSON.stringify(ls));}
+
+function showApp(){
+  document.getElementById('screen-auth').classList.remove('active');
+  document.getElementById('bnav').style.display='flex';
+  go('checkin');
+}
+
+function go(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+n).classList.add('active');
+  document.getElementById('nav-'+n).classList.add('active');
+  if(n==='checkin')  rCI();
+  if(n==='progress') rPG();
+  if(n==='result')   rRS();
+}
+
+/* ── 打卡頁 ── */
+function rCI(){
+  const day=cd();
+  document.getElementById('ci-day').textContent='Day '+day;
+  document.getElementById('ci-date').textContent=fd(new Date());
+  document.getElementById('q-day').textContent='第 '+day+' 天';
+  document.getElementById('q-txt').textContent=QS[Math.min(day-1,29)];
+  rCal();rItems();
+  const td=ts(),now=new Date(),past=now.getHours()>=DL,done=ml().some(l=>l.date===td);
+  document.getElementById('dbanner').style.display=(past&&!done)?'block':'none';
+  const btn=document.getElementById('sbtn');
+  btn.disabled=(past&&!done)||done;
+  if(done){btn.textContent='✅ 今日已打卡';btn.style.background='var(--gbl)';}
+  else{btn.textContent='提交今日打卡';btn.style.background='';}
+}
+
+function rCal(){
+  const grid=document.getElementById('calgrid');grid.innerHTML='';
+  /* Monday-first: Mon=0, Tue=1 ... Sun=6 */
+  const dow=START.getDay(); /* 0=Sun,1=Mon... */
+  const startOffset=(dow===0)?6:dow-1;
+  for(let i=0;i<startOffset;i++){const e=document.createElement('div');e.style.cssText='aspect-ratio:1';grid.appendChild(e);}
+  const td=ts(),myL=ml();
+  for(let d=1;d<=DAYS;d++){
+    const date=new Date(START);date.setDate(START.getDate()+d-1);
+    const ds=d2s(date),log=myL.find(l=>l.date===ds);
+    const isToday=ds===td,isFuture=date>new Date();
+    const cell=document.createElement('div');
+    cell.className='ccell'+(isFuture&&!isToday?' future':'');
+    if(isToday) cell.classList.add('today');
+    const gc=GC[(d-1)%7],done=!!log,op=done?'1':'0.42';
+    const check=done
+      ?`<text x="30" y="18" font-size="13" text-anchor="middle" fill="${gc.r}" font-weight="bold">✓</text>`
+      :`<text x="30" y="16" font-size="9" text-anchor="middle" fill="${gc.r}" opacity=".7">${d}</text>`;
+    cell.innerHTML=`<svg width="100%" height="100%" viewBox="0 0 60 68" fill="none" opacity="${op}">
+      <rect x="1" y="1" width="58" height="66" rx="9" fill="${gc.b}" opacity=".25"/>
+      <ellipse cx="19" cy="22" rx="5" ry="3.5" fill="${gc.b}" transform="rotate(-15 19 22)"/>
+      <ellipse cx="41" cy="22" rx="5" ry="3.5" fill="${gc.b}" transform="rotate(15 41 22)"/>
+      <ellipse cx="30" cy="38" rx="19" ry="21" fill="white" stroke="${gc.l}" stroke-width="1.3"/>
+      <circle cx="23" cy="33" r="2" fill="#3D3530"/>
+      <circle cx="37" cy="33" r="2" fill="#3D3530"/>
+      <rect x="23" y="42" width="14" height="2.5" rx="1.2" fill="#3D3530"/>
+      <ellipse cx="21" cy="58" rx="7" ry="4" fill="${gc.b}"/>
+      <ellipse cx="39" cy="58" rx="7" ry="4" fill="${gc.b}"/>
+      ${check}
+    </svg>`;
+    grid.appendChild(cell);
+  }
+}
+
+function rItems(){
+  const c=document.getElementById('ci-items');c.innerHTML='';
+  ITEMS.forEach(item=>{
+    const on=!!ck[item.id];
+    const div=document.createElement('div');div.className='ci';
+    div.onclick=()=>tog(item.id);
+    div.innerHTML=`<div class="cbox${on?' on':''}" id="bx-${item.id}">${on?'✓':''}</div>
+      <div><div class="clab">${item.e} ${item.t}</div>${item.sub?`<div class="csub">${item.sub}</div>`:''}</div>`;
+    c.appendChild(div);
+  });
+  if(ft){document.querySelectorAll('.fchip').forEach(ch=>{
+    const m=ch.getAttribute('onclick').match(/'(\w+)'/);if(m&&m[1]===ft)ch.classList.add('on');
+  });}
+}
+
+function tog(id){
+  const td=ts();if(ml().some(l=>l.date===td))return;
+  if(new Date().getHours()>=DL)return;
+  ck[id]=!ck[id];const b=document.getElementById('bx-'+id);
+  b.className='cbox'+(ck[id]?' on':'');b.textContent=ck[id]?'✓':'';
+}
+
+function pickF(t,btn){
+  ft=t;document.querySelectorAll('.fchip').forEach(c=>c.classList.remove('on'));btn.classList.add('on');
+  if(!ck.finance){ck.finance=true;const b=document.getElementById('bx-finance');
+    if(b){b.className='cbox on';b.textContent='✓';}}
+}
+
+async function doSubmit(){
+  const td=ts(),now=new Date();
+  if(now.getHours()>=DL) return tk('已超過 23:00，今日打卡截止');
+  if(ml().some(l=>l.date===td)) return tk('今日已提交');
+  const items=Object.entries(ck).filter(([,v])=>v).map(([k])=>k);
+  const log={date:td,userId:me.id,count:items.length,items:items.join(','),
+    financeType:ft,financeNote:g('f-note'),
+    reflectGood:g('r-good'),reflectBad:g('r-bad'),reflectBetter:g('r-better')};
+  try{await gas('submitLog',{userId:me.id,...log});}catch(e){sl(log);}
+  logs.push(log);tk(`提交成功！今日得 ${items.length} 分 🎉`);rCI();
+}
+
+/* ── 進度牆 ── */
+function rPG(){
+  const myL=ml(),day=cd();
+  /* 今日數據 */
+  const td=ts();
+  const todayLog=myL.find(l=>l.date===td);
+  const todayScore=todayLog?(todayLog.count||0):0;
+  const todayPct=Math.round(todayScore/7*100);
+  document.getElementById('today-score').textContent=todayScore+'/7';
+  document.getElementById('today-pct').textContent=todayPct+'%';
+  /* 今日排行：比較今日各人分數 */
+  const allTodayScores={};
+  logs.forEach(l=>{if(l.date===td)allTodayScores[l.userId]=l.count||0;});
+  if(!allTodayScores[me.id]) allTodayScores[me.id]=todayScore;
+  const myScore=allTodayScores[me.id];
+  const rank=Object.values(allTodayScores).filter(s=>s>myScore).length+1;
+  document.getElementById('today-rank').textContent=rank+'名';
+  const ib=document.getElementById('ibars');ib.innerHTML='';
+  ITEMS.forEach(item=>{
+    const cnt=myL.filter(l=>pi(l.items)[item.id]).length;
+    const ip=day>0?Math.round(cnt/day*100):0;
+    ib.innerHTML+=`<div class="ibar">
+      <div class="ibh"><span class="ibn">${item.e} ${item.t.slice(0,16)}${item.t.length>16?'…':''}</span>
+      <span class="ibc">${cnt}次·${ip}%</span></div>
+      <div class="btrack"><div class="bfill" style="width:${ip}%"></div></div></div>`;
+  });
+}
+
+function pgTab(i){
+  document.querySelectorAll('#pg-tabs .tab').forEach((t,j)=>t.classList.toggle('active',j===i));
+  [0,1,2].forEach(j=>{const e=document.getElementById('pg'+j);if(e)e.style.display=j===i?'block':'none';});
+  if(i===1)rRK();if(i===2)rJN();
+}
+
+function rRK(){
+  const map={};
+  logs.forEach(l=>{if(!map[l.userId])map[l.userId]={id:l.userId,name:l.userName||l.userId,tot:0,days:0};
+    map[l.userId].tot+=(l.count||0);map[l.userId].days++;});
+  if(!map[me.id])map[me.id]={id:me.id,name:me.name,tot:0,days:0};
+  users.forEach(u=>{if(map[u.id])map[u.id].name=u.name;});map[me.id].name=me.name;
+  const ranked=Object.values(map).sort((a,b)=>{
+    const pa=a.days?a.tot/(cd()*7):0,pb=b.days?b.tot/(cd()*7):0;return pb-pa;});
+  const med=['g','s','b'];
+  document.getElementById('rklist').innerHTML=ranked.map((u,i)=>{
+    const pct=Math.round(u.tot/(cd()*7)*100),isMe=u.id===me.id;
+    return`<div class="rankrow${isMe?' me':''}">
+      <div class="rnum ${med[i]||''}">${i+1}</div>
+      <div class="rinfo"><div class="rnm">${u.name}${isMe?' （我）':''}</div>
+      <div class="rsub">${u.days}天打卡·${u.tot}分</div></div>
+      <div style="font-size:20px;font-weight:700">${pct}%</div></div>`;
+  }).join('')||'<div style="text-align:center;padding:22px;color:var(--sf);font-size:15px">還沒有人打卡</div>';
+}
+
+function rJN(){
+  const myL=ml().filter(l=>l.reflectGood||l.reflectBad||l.reflectBetter);
+  const c=document.getElementById('jtl');
+  if(!myL.length){c.innerHTML='<div style="text-align:center;padding:22px;color:var(--sf);font-size:15px">還沒有復盤紀錄</div>';return;}
+  c.innerHTML=[...myL].reverse().map((log,i)=>{
+    const isLast=i===myL.length-1;
+    return`<div class="tle">
+      <div class="tldc"><div class="tld"></div>${!isLast?'<div class="tll"></div>':''}</div>
+      <div style="flex:1;padding-bottom:18px">
+        <div class="tldate">Day ${dn(log.date)} · ${log.date}</div>
+        ${log.reflectGood?`<div class="tltext">✅ ${log.reflectGood}</div>`:''}
+        ${log.reflectBad?`<div class="tltext" style="margin-top:5px">❌ ${log.reflectBad}</div>`:''}
+        ${log.reflectBetter?`<div class="tltext" style="margin-top:5px">💡 ${log.reflectBetter}</div>`:''}
+        <div class="tlbs"><span class="tlb">${log.count||0}/7分</span>
+        ${log.financeType?`<span class="tlb">💰 ${fl(log.financeType)}</span>`:''}</div>
+      </div></div>`;
+  }).join('');
+}
+
+/* ── 成果頁 ── */
+function rRS(){
+  const myL=ml(),tot=myL.reduce((s,l)=>s+(l.count||0),0);
+  const elapsed=Math.min(cd(),DAYS);
+  const pct=elapsed>0?Math.round(tot/(elapsed*7)*100):0;
+  document.getElementById('res-rate').textContent=pct+'%';
+  /* 累積紀錄 */
+  document.getElementById('res-total-score').textContent=tot;
+  document.getElementById('res-streak').textContent=stk(myL);
+  document.getElementById('res-days').textContent=myL.length;
+  /* 排行名次（累積完成率） */
+  const map={};
+  logs.forEach(l=>{if(!map[l.userId])map[l.userId]={tot:0,days:0};map[l.userId].tot+=(l.count||0);map[l.userId].days++;});
+  if(!map[me.id])map[me.id]={tot:tot,days:myL.length};
+  const myPct=map[me.id].days?map[me.id].tot/(DAYS*7):0;
+  const cumRank=Object.values(map).filter(u=>{const p=u.days?u.tot/(DAYS*7):0;return p>myPct;}).length+1;
+  document.getElementById('res-rank').textContent=cumRank+'名';
+  document.getElementById('rws').textContent=me.ws||'--';
+  document.getElementById('rbs').textContent=calcBMI(me.ws,me.height);
+  /* 今日體重欄位預設清空 */
+  document.getElementById('rwn').textContent='--';
+  document.getElementById('rbn').textContent='--';
+  document.getElementById('weight-change-msg').textContent='';
+  const ri=document.getElementById('ritems');ri.innerHTML='';
+  ITEMS.forEach(item=>{
+    const cnt=myL.filter(l=>pi(l.items)[item.id]).length,ip=Math.round(cnt/DAYS*100);
+    ri.innerHTML+=`<div class="ibar">
+      <div class="ibh"><span class="ibn">${item.e} ${item.t.slice(0,16)}${item.t.length>16?'…':''}</span>
+      <span class="ibc">${cnt}次·${ip}%</span></div>
+      <div class="btrack"><div class="bfill" style="width:${ip}%"></div></div></div>`;
+  });
+  /* 排行榜：所有參賽者累積達成率 */
+  const lbMap={};
+  logs.forEach(l=>{
+    if(!lbMap[l.userId])lbMap[l.userId]={name:l.userName||l.userId,tot:0,days:0};
+    lbMap[l.userId].tot+=(l.count||0);
+    lbMap[l.userId].days++;
+  });
+  if(!lbMap[me.id])lbMap[me.id]={name:me.name,tot:tot,days:myL.length};
+  users.forEach(u=>{if(lbMap[u.id])lbMap[u.id].name=u.name;});
+  lbMap[me.id].name=me.name;
+  const lbRanked=Object.entries(lbMap)
+    .map(([uid,u])=>({uid,...u,pct:u.days>0?Math.round(u.tot/(elapsed*7)*100):0}))
+    .sort((a,b)=>b.pct-a.pct);
+  const medals=['g','s','b'];
+  document.getElementById('res-leaderboard').innerHTML=lbRanked.map((u,i)=>{
+    const isMe=u.uid===me.id;
+    return`<div class="rankrow${isMe?' me':''}">
+      <div class="rnum ${medals[i]||''}">${i+1}</div>
+      <div class="rinfo">
+        <div class="rnm">${u.name}${isMe?' （我）':''}</div>
+        <div class="rsub">${u.days}天打卡 · ${u.tot}分</div>
+      </div>
+      <div style="font-size:20px;font-weight:700;font-family:var(--fn-body)">${u.pct}%</div>
+    </div>`;
+  }).join('')||'<div style="text-align:center;padding:18px;color:var(--sf);font-size:15px">還沒有紀錄</div>';
+
+  const fN=myL.filter(l=>l.financeType==='normal').length;
+  const fS=myL.filter(l=>l.financeType==='save').length;
+  const fW=myL.filter(l=>l.financeType==='waste').length;
+  const fT=fN+fS+fW||1;
+  document.getElementById('rfbar').innerHTML=`
+    <div class="fseg" style="flex:${fN||.1};background:var(--gb);min-width:${fN?6:0}px">${fN>3?`<span>${fN}</span>`:''}</div>
+    <div class="fseg" style="flex:${fS||.1};background:var(--or);min-width:${fS?6:0}px">${fS>3?`<span>${fS}</span>`:''}</div>
+    <div class="fseg" style="flex:${fW||.1};background:var(--col);min-width:${fW?6:0}px">${fW>3?`<span>${fW}</span>`:''}</div>`;
+  let insight='';
+  if(fS/fT>.4)insight=`這個月你有 ${fS} 天有意識地省下一筆錢。有意識地花錢，是財務自由的第一步。`;
+  else if(fW/fT>.4)insight=`這個月記錄了 ${fW} 次「浪費」——但誠實面對是改變的開始。知道自己在哪裡漏財，才能堵住缺口。`;
+  else insight=`你的財務記錄很均衡。${fS}次省下、${fW}次浪費、${fN}次正常——最重要的是，你開始觀察自己的金錢行為了。`;
+  document.getElementById('rfi').textContent=insight;
+}
+
+/* 計算第30天體重變化 */
+function calcBodyChange(){
+  const fw=parseFloat(document.getElementById('final-weight').value);
+  if(!fw||fw<20||fw>300) return tk('請輸入有效的體重數字');
+  const sw=me.ws||0;
+  const diff=(fw-sw).toFixed(1);
+  const diffAbs=Math.abs(diff);
+  document.getElementById('rwn').textContent=fw;
+  document.getElementById('rbn').textContent=calcBMI(fw,me.height);
+  let msg='';
+  if(diff<0) msg=`這個月減了 ${diffAbs} kg！身體在回應你的努力 💪`;
+  else if(diff>0) msg=`這個月增了 ${diffAbs} kg，但你養成了好習慣，這才是最重要的 🌱`;
+  else msg=`體重維持不變，但你建立了30天的好習慣！`;
+  document.getElementById('weight-change-msg').textContent=msg;
+}
+
+function calcBMI(w,h){
+  if(!w||!h) return '--';
+  const hm=h/100;
+  return (w/(hm*hm)).toFixed(1);
+}
+
+/* ── GAS ── */
+async function gas(a,d={}){
+  if(GAS==='YOUR_GAS_DEPLOY_URL_HERE') throw new Error('demo');
+  const r=await fetch(GAS,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:a,...d})});
+  return r.json();
+}
+
+/* ── 工具 ── */
+function g(id){return(document.getElementById(id)||{}).value?.trim()||''}
+function sv(){localStorage.setItem('apr_u',JSON.stringify(me))}
+function ts(){return d2s(new Date())}
+function d2s(d){return`${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`}
+function z(n){return String(n).padStart(2,'0')}
+function fd(d){const days=['日','一','二','三','四','五','六'];
+  return`${d.getMonth()+1}月${d.getDate()}日 · 星期${days[d.getDay()]}`}
+function cd(){const diff=Math.floor((new Date()-START)/86400000)+1;return Math.max(1,Math.min(diff,DAYS))}
+function dn(ds){return Math.floor((new Date(ds)-START)/86400000)+1}
+function pi(s){const o={};(s||'').split(',').forEach(k=>{if(k)o[k.trim()]=true});return o}
+function stk(ml){
+  if(!ml.length)return 0;
+  const s=[...ml].sort((a,b)=>b.date.localeCompare(a.date));
+  let n=0,cur=new Date();cur.setHours(0,0,0,0);
+  for(const l of s){const ld=new Date(l.date);ld.setHours(0,0,0,0);
+    const diff=Math.round((cur-ld)/86400000);
+    if(diff<=1&&l.count>0){n++;cur=ld;}else break;}
+  return n;
+}
+function fl(t){return{normal:'正常花費',save:'省下一筆',waste:'浪費一筆'}[t]||t}
+function tk(msg){const t=document.getElementById('toast');t.textContent=msg;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+</script>
+</body>
+</html>
