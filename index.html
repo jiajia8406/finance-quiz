@@ -603,7 +603,7 @@ input[type=number]{-moz-appearance:textfield}
 </div>
 
 <script>
-const GAS='YOUR_GAS_DEPLOY_URL_HERE';
+const GAS='https://script.google.com/macros/s/AKfycbxSe7SP6wxi9FjNMuMs1xUy8MZPuPy7tdbzb9fA1Izsh1m6Dbi5Qc_WkfcZyKa7ZRbu/exec';
 const START=new Date('2026-04-06T00:00:00');
 const DAYS=30, DL=23;
 
@@ -647,8 +647,8 @@ const QS=[
   "嘴巴長在別人身上，你只能照顧好自己的心",
   "好好吃飯，好好睡覺，好好說話，好好的你。",
   "變成連自己都欽佩的我！",
-  "在變好的路上，有你陪著我，我也陪著你，一起前行",
-  "你做到了。真的。"
+  "在變好的路上，有你陪我，我也陪你，一起成長",
+  "你的努力都沒有白費，你做到了，真棒！"
 ];
 
 const GC=[
@@ -1022,7 +1022,7 @@ function calcBMI(w,h){
 
 /* ── GAS ── */
 async function gas(a,d={}){
-  if(GAS==='YOUR_GAS_DEPLOY_URL_HERE') throw new Error('demo');
+  if(GAS==='https://script.google.com/macros/s/AKfycbxSe7SP6wxi9FjNMuMs1xUy8MZPuPy7tdbzb9fA1Izsh1m6Dbi5Qc_WkfcZyKa7ZRbu/exec') throw new Error('demo');
   const payload=encodeURIComponent(JSON.stringify({action:a,...d}));
   const url=GAS+'?data='+payload;
   const r=await fetch(url,{redirect:'follow'});
