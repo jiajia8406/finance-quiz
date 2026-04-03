@@ -603,7 +603,7 @@ input[type=number]{-moz-appearance:textfield}
 </div>
 
 <script>
-const GAS='YOUR_GAS_DEPLOY_URL_HERE';
+const GAS='https://script.google.com/macros/s/AKfycbxSe7SP6wxi9FjNMuMs1xUy8MZPuPy7tdbzb9fA1Izsh1m6Dbi5Qc_WkfcZyKa7ZRbu/exec';
 const START=new Date('2026-04-06T00:00:00');
 const DAYS=30, DL=23;
 
@@ -1022,7 +1022,7 @@ function calcBMI(w,h){
 
 /* ── GAS ── */
 async function gas(a,d={}){
-  if(GAS==='YOUR_GAS_DEPLOY_URL_HERE') throw new Error('demo');
+  if(GAS==='https://script.google.com/macros/s/AKfycbxSe7SP6wxi9FjNMuMs1xUy8MZPuPy7tdbzb9fA1Izsh1m6Dbi5Qc_WkfcZyKa7ZRbu/exec') throw new Error('demo');
   const r=await fetch(GAS,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:a,...d})});
   return r.json();
 }
